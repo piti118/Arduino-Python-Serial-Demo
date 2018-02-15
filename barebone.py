@@ -2,6 +2,8 @@ import serial
 import time
 
 
+# matching sketch at
+# https://create.arduino.cc/editor/piti118/d62e2b1e-f304-48b8-99cd-0d57f0375e1c/preview
 def main():
     address = "/dev/cu.usbmodem1411"  # change this to yours!!!
     baudrate = 9600  # make sure the baud rate matches

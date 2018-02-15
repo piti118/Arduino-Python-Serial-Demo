@@ -4,9 +4,12 @@ import serial.tools.list_ports
 import time
 import tkinter as tk
 
+# matching sketch at
+# https://create.arduino.cc/editor/piti118/d62e2b1e-f304-48b8-99cd-0d57f0375e1c/preview
 
-def connect_arduino(baudrate=9600):
+def connect_arduino(baudrate=9600): # a more civilized way to connect to arduino
     def is_arduino(p):
+        # need more comprehensive test
         return p.manufacturer is not None and 'arduino' in p.manufacturer.lower()
 
     ports = serial.tools.list_ports.comports()
