@@ -6,7 +6,7 @@ import collections
 import matplotlib
 
 matplotlib.use("TkAgg")
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib import style
 style.use("ggplot")
 
@@ -113,7 +113,7 @@ class LivePlot(tk.Frame):
         self.line, = self.ax.plot(self.streamer.time, self.streamer.data, 'r')
         self.ax.set_ylim(400, 600)
         self.canvas = FigureCanvasTkAgg(self.fig, self)
-        self.canvas.show()
+        self.canvas.draw()
         self.canvas.get_tk_widget().pack()
         self.should_stop = True
         # self.ani = animation.FuncAnimation(self.fig, self.animate, interval=50, blit=False)
