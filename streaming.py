@@ -15,13 +15,14 @@ import threading
 
 import tkinter as tk
 from matplotlib.figure import Figure
-
+import numpy as np
 
 
 
 def connect_arduino(baudrate=9600):
     def is_arduino(p):
-        return p.manufacturer is not None and 'arduino' in p.manufacturer.lower()
+        return p.device == '/dev/cu.usbserial-1130'
+        #return p.manufacturer is not None and 'arduino' in p.manufacturer.lower()
 
     ports = serial.tools.list_ports.comports()
     arduino_ports = [p for p in ports if is_arduino(p)]
@@ -99,6 +100,9 @@ class DataStream:
     def min(self):
         return -1 if not self.data else min(self.data)
 
+    def std(self):
+        return -1 if not self.data else np.std(self.data)
+
     def status(self):
         return "ndata = %d" % (len(self.time))
 
@@ -157,17 +161,21 @@ class SummaryInfo(tk.Frame):
         self.mean = tk.DoubleVar()
         self.max = tk.DoubleVar()
         self.min = tk.DoubleVar()
+        self.std = tk.DoubleVar()
         self.mean_label = LabelValue(self, 'Mean', self.mean)
         self.mean_label.pack(side=tk.TOP)
         self.max_label = LabelValue(self, 'Max', self.max)
         self.max_label.pack(side=tk.TOP)
         self.min_label = LabelValue(self, 'Min', self.min)
         self.min_label.pack(side=tk.TOP)
+        self.std_label = LabelValue(self, 'Std', self.std)
+        self.std_label.pack(side=tk.TOP)
 
     def update(self):
         self.mean.set(self.streamer.mean())
         self.max.set(self.streamer.max())
         self.min.set(self.streamer.min())
+        self.std.set(self.streamer.std())
 
     def start(self):
         self.update()

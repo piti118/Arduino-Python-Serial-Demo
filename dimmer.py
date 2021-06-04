@@ -26,8 +26,8 @@ import tkinter as tk
 def connect_arduino(baudrate=9600): # a more civilized way to connect to arduino
     def is_arduino(p):
         # need more comprehensive test
-        # return p.device == '/dev/cu.usbserial-1130'
-        return p.manufacturer is not None and 'arduino' in p.manufacturer.lower()
+        return p.device == '/dev/cu.usbserial-1130'
+        # return p.manufacturer is not None and 'arduino' in p.manufacturer.lower()
 
     ports = serial.tools.list_ports.comports()
     arduino_ports = [p for p in ports if is_arduino(p)]
@@ -66,8 +66,9 @@ class DimmerUI:
         self.frame = tk.Frame(parent)
         self.dimmer = dimmer
         self.slider = tk.Scale(self.frame, from_=0, to=255, 
-                               orient="horizontal")
-        self.slider.bind("<ButtonRelease-1>", self.updateValue)
+                               orient="horizontal",
+                               command=self.updateValue)
+        #self.slider.bind("<ButtonRelease-1>", self.updateValue)
 
         self.slider.pack()
         self.frame.pack()
