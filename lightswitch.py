@@ -10,7 +10,8 @@ import tkinter as tk
 def connect_arduino(baudrate=9600): # a more civilized way to connect to arduino
     def is_arduino(p):
         # need more comprehensive test
-        return p.manufacturer is not None and 'arduino' in p.manufacturer.lower()
+        return p.device == '/dev/cu.usbserial-1130'
+        #return p.manufacturer is not None and 'arduino' in p.manufacturer.lower()
 
     ports = serial.tools.list_ports.comports()
     arduino_ports = [p for p in ports if is_arduino(p)]
@@ -44,11 +45,17 @@ class LightSwitch:
     def get_status(self):
         self.send_rec('status')
 
-    def turn_on(self):
-        self.send_rec('on')
+    def turn_on1(self):
+        self.send_rec('on1')
 
-    def turn_off(self):
-        self.send_rec('off')
+    def turn_off1(self):
+        self.send_rec('off1')
+
+    def turn_on2(self):
+        self.send_rec('on2')
+
+    def turn_off2(self):
+        self.send_rec('off2')
 
 
 class SwitchUI:
@@ -56,11 +63,17 @@ class SwitchUI:
         self.switch = switch
         self.frame = tk.Frame(parent)
         self.on_button = tk.Button(self.frame,
-                                   text="on",
-                                   command=lambda: switch.turn_on()).pack()
+                                   text="on1",
+                                   command=lambda: switch.turn_on1()).pack()
         self.off_button = tk.Button(self.frame,
-                                    text="off",
-                                    command=lambda: switch.turn_off()).pack()
+                                    text="off1",
+                                    command=lambda: switch.turn_off1()).pack()
+        self.on_button = tk.Button(self.frame,
+                            text="on2",
+                            command=lambda: switch.turn_on2()).pack()
+        self.off_button = tk.Button(self.frame,
+                                    text="off2",
+                                    command=lambda: switch.turn_off2()).pack()
         self.frame.pack()
 
 
