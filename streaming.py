@@ -17,6 +17,19 @@ import tkinter as tk
 from matplotlib.figure import Figure
 import numpy as np
 
+# void setup() {
+#   // put your setup code here, to run once:
+#   Serial.begin(250000);
+# }
+
+# void loop() {
+#   // put your main code here, to run repeatedly:
+#   int d = analogRead(A0);
+#   int d1 = analogRead(A1);
+#   unsigned long t = millis();
+#   String toSend = String(t) + " " + String(d) + " " + String(d1);
+#   Serial.println(toSend);
+# }
 
 
 def connect_arduino(baudrate=9600):
@@ -51,6 +64,7 @@ class DataStream:
         ndata = 2000
         self.time = collections.deque([], ndata)
         self.data = collections.deque([], ndata)
+        self.data1 = collections.deque([], ndata)
         self.lock = threading.Lock()
         self.shouldStop = True
         self.thread = None
@@ -81,13 +95,14 @@ class DataStream:
         # print(data)
         splitted = data.split(' ')
 
-        if len(splitted) == 2:
-            t, d = splitted
-            ft, fd = 0., 0.
+        if len(splitted) == 3:
+            t, d, d1 = splitted
+            ft, fd, fd1 = 0., 0., 0.
             try:
-                ft, fd = float(t), float(d)
+                ft, fd, fd1 = float(t), float(d), float(d1)
                 self.time.append(ft)
                 self.data.append(fd)
+                self.data1.append(fd1)
             except ValueError as e:
                 pass
 
@@ -115,6 +130,7 @@ class LivePlot(tk.Frame):
 
         self.ax = self.fig.add_subplot(1, 1, 1)
         self.line, = self.ax.plot(self.streamer.time, self.streamer.data, 'r')
+        self.line1, = self.ax.plot(self.streamer.time, self.streamer.data1, 'b')
         self.ax.set_ylim(400, 600)
         self.canvas = FigureCanvasTkAgg(self.fig, self)
         self.canvas.draw()
@@ -135,6 +151,7 @@ class LivePlot(tk.Frame):
 
     def animate(self):
         self.line.set_data(self.streamer.time, self.streamer.data)
+        self.line1.set_data(self.streamer.time, self.streamer.data1)
         if len(self.streamer.time) > 2:
             self.ax.set_xlim(self.streamer.time[0], self.streamer.time[-1])
         else:
