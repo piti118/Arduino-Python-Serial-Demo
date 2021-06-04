@@ -21,8 +21,8 @@ import numpy as np
 
 def connect_arduino(baudrate=9600):
     def is_arduino(p):
-        return p.device == '/dev/cu.usbserial-1130'
-        #return p.manufacturer is not None and 'arduino' in p.manufacturer.lower()
+        #return p.device == '/dev/cu.usbserial-1130'
+        return p.manufacturer is not None and 'arduino' in p.manufacturer.lower()
 
     ports = serial.tools.list_ports.comports()
     arduino_ports = [p for p in ports if is_arduino(p)]
